@@ -1,11 +1,8 @@
-/*
- * react-qml
- * https://github.com/grassator/react-qml
- *
- * Copyright (c) 2015 Dmitriy Kubyshkin
- * Licensed under the MIT license.
- */
-
 'use strict';
 
-module.exports = 'awesome';
+var React = require('react');
+var assign = require('object.assign');
+
+module.exports = assign({}, React, {
+
+});
