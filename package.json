@@ -1,0 +1,41 @@
+{
+  "name": "react-qml",
+  "description": "Bridge library from React.js to Qt QML",
+  "version": "0.0.1",
+  "homepage": "https://github.com/grassator/react-qml",
+  "bugs": "https://github.com/grassator/react-qml/issues",
+  "license": "MIT",
+  "main": "index.js",
+  "author": {
+    "name": "Dmitriy Kubyshkin",
+    "email": "dmtiriy@kubyshkin.ru"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grassator/react-qml"
+  },
+  "keywords": [
+    "react-qml",
+    "react",
+    "qt",
+    "qml"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-bump": "^0.3.0",
+    "gulp-eslint": "^0.8.0",
+    "gulp-istanbul": "^0.5.0",
+    "gulp-load-plugins": "^0.9.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^0.6.5",
+    "gulp-util": "^3.0.1",
+    "referee": "^1.1.1"
+  },
+  "bin": {
+    "react-qml": "cli.js"
+  },
+  "scripts": {
+    "test": "gulp test"
+  }
+}
