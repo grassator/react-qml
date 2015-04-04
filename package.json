@@ -1,7 +1,7 @@
 {
   "name": "react-qml",
   "description": "Bridge library from React.js to Qt QML",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/grassator/react-qml",
   "bugs": "https://github.com/grassator/react-qml/issues",
   "license": "MIT",

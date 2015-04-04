@@ -3,6 +3,8 @@
 var ReactQml = require('../');
 var assert = require('referee').assert;
 
+require('../support/Qt');
+
 describe('ReactQml', function () {
 
     describe('interface', function () {
