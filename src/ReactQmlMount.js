@@ -1,10 +1,18 @@
 'use strict';
 
+var React = require('react');
 var ReactReconciler = require('react/lib/ReactReconciler');
 var ReactUpdates = require('react/lib/ReactUpdates');
 var ReactUpdateQueue = require('react/lib/ReactUpdateQueue');
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require('react/lib/instantiateReactComponent');
+
+var ReactQmlComponent = require('./ReactQmlComponent');
+var ReactQmlComponentCompositeWrapper = React.createClass({
+    render: function () {
+        return this.props.children;
+    }
+});
 
 /**
  * Mounts this component and inserts it into the QML Document.
@@ -80,6 +88,12 @@ exports.unmountComponentAtNode = function (container) {
 };
 
 exports.render = function (nextElement, container, callback) {
+    // This is necessary to avoid ReactQmlComponent being subclass of ReactCompositeComponent
+    // at least as of version 0.13.1 Facebook employs similar hack
+    if (nextElement.type.prototype instanceof ReactQmlComponent) {
+        nextElement = React.createElement(ReactQmlComponentCompositeWrapper, null, nextElement);
+    }
+
     var prevComponent = getComponentForContainer(container);
 
     if (prevComponent) {

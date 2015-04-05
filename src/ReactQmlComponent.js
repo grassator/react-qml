@@ -11,6 +11,7 @@ function ReactQmlComponent() {
 
     // These properties are expected by ReactMultiChild
     this.node = null;
+    this._currentElement = null;
     this._rootNodeID = null;
     this._mountImage = null;
     this._renderedChildren = null;
@@ -41,10 +42,17 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
     },
 
     applyNodeProps: function(oldProps, props) {
+        // applying new / changed properties
         Object.keys(props).forEach(function (key) {
             if (key === 'children' || key === 'key' || key === 'ref') { return; }
             if (props[key] === oldProps[key]) { return; }
             this.node[key] = props[key];
+        }, this);
+
+        // unsetting removed properties
+        Object.keys(oldProps).forEach(function (key) {
+            if (key in props) { return; }
+            this.node[key] = undefined;
         }, this);
     },
 
@@ -57,8 +65,11 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
         return this.node;
     },
 
-    receiveComponent: function(/*nextComponent, transaction, context */) {
-        // React uses this method for duck-typing
+    receiveComponent: function(nextComponent/*, transaction, context*/) {
+        var props = nextComponent.props;
+        var oldProps = this._currentElement.props;
+        this.applyNodeProps(oldProps, props);
+        this._currentElement = nextComponent;
     },
 
     unmountComponent: function() {

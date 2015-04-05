@@ -64,6 +64,26 @@ describe('ReactQml', function () {
             React.unmountComponentAtNode(root);
             assert.equals(root.children, []);
         });
+
+        it('should allow to update properties by re-rendering a ReactQmlComponent', function () {
+            React.render(React.createElement(React.Rectangle), root);
+            React.render(React.createElement(React.Rectangle, {
+                color: 'red'
+            }), root);
+            assert.match(root, {
+                children: [{ color: 'red' }]
+            });
+        });
+
+        it('should allow to unset properties by re-rendering a ReactQmlComponent', function () {
+            React.render(React.createElement(React.Rectangle, {
+                color: 'red'
+            }), root);
+            React.render(React.createElement(React.Rectangle), root);
+            assert.match(root, {
+                children: [{ color: undefined }]
+            });
+        });
     });
 
 });
