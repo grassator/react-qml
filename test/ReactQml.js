@@ -9,11 +9,11 @@ describe('ReactQml', function () {
 
     describe('interface', function () {
 
-        it('should be provide `render` method', function () {
+        it('should provide `render` method', function () {
             assert.isFunction(React.render);
         });
 
-        it('should be provide `unmountComponentAtNode`', function () {
+        it('should provide `unmountComponentAtNode`', function () {
             assert.isFunction(React.unmountComponentAtNode);
         });
 
@@ -84,6 +84,48 @@ describe('ReactQml', function () {
                 children: [{ color: undefined }]
             });
         });
+
+        it('should allow render nested ReactQmlComponents', function () {
+            React.render(React.createElement(React.Rectangle, null,
+                React.createElement(React.Rectangle, null,
+                    React.createElement(React.Rectangle)
+                )
+            ), root);
+            assert.match(root.children, [{
+                    children: [{
+                        children: [{
+                            children: { length: 0 }
+                        }]
+                    }]
+            }]);
+        });
+
+        it('should allow to add children by re-rendering a ReactQmlComponent', function () {
+            React.render(React.createElement(React.Rectangle), root);
+            React.render(React.createElement(React.Rectangle, null,
+                React.createElement(React.Rectangle)
+            ), root);
+            assert.match(root.children, [{
+                children: [{
+                    children: { length: 0 }
+                }]
+            }]);
+        });
+
+        it('should allow to remove children by re-rendering a ReactQmlComponent', function () {
+            React.render(React.createElement(React.Rectangle, null,
+                React.createElement(React.Rectangle, { key: 'one' }),
+                React.createElement(React.Rectangle, { key: 'two' })
+            ), root);
+            React.render(React.createElement(React.Rectangle, null,
+                React.createElement(React.Rectangle, { key: 'two' })
+            ), root);
+            assert.match(root.children, [{
+                children: { 0: { objectName: 'two' }, length: 1 }
+            }]);
+        });
+
+
     });
 
 });
