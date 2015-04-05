@@ -10,17 +10,62 @@
 
 `react-qml` is a bridge library that allows to use React.js with QML.
 
+## Roadmap
+
+- [x] rendering and re-rendering and unmounting React Component trees. (0.1.0)
+- [ ] components for other QML primitives like `Text`, `Item`, `Image`, etc.
+- [ ] event listeners
 
 ## Install
 
-```bash
-$ npm install --save react-qml
+At the moment ReactQml requires special manual bundling before it can be used inside Qml, so you have to download javascript bundle manually from [releases pages|https://github.com/grassator/react-qml/releases].
+
+After that place it in your QML root, and import by adding following line at the top your `main.qml`:
+
+```qml
+.import 'ReactQml.js' as React
 ```
 
+## Example
 
-## API
+Usage of `ReactQml` is pretty straightforward — the only difference from web version is that you need to pass id of the qml item to `React.render` instead of DOM node. For example:
 
-_(Coming soon)_
+```qml
+import QtQuick 2.4
+import QtQuick.Controls 1.3
+import "js/ReactQml.js" as React
+
+ApplicationWindow {
+    id: root
+    title: qsTr("React QML")
+    width: 300
+    height: 300
+    visible: true
+
+    function reactRender(x, y) {
+        var props = {
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 100,
+            color: '#000'
+        };
+        var childProps = {
+            x: 25,
+            y: 25,
+            width: 50,
+            height: 50,
+            color: '#fff'
+        };
+        var child = React.createElement(React.Rectangle, childProps);
+        React.render(React.createElement(React.Rectangle, props, child), root);
+    }
+
+    Component.onCompleted: {
+        reactRender();
+    }
+}
+```
 
 
 ## Contributing
