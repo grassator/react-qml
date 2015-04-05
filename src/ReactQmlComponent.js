@@ -62,7 +62,9 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
     },
 
     unmountComponent: function() {
-        // React uses this method for duck-typing
+        // TODO check if it's necessary to unbind events here
+        this.node.destroy();
+        this.node = null;
     }
 
 });
