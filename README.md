@@ -6,7 +6,7 @@
 [![Inline docs][doc-image]][doc-url]
 [![Code Climate][climate-image]][climate-url]
 
-> This is work in progress and 
+> This is work in progress, so expect things to be broken or not implemented.
 
 `react-qml` is a bridge library that allows to use React.js with QML.
 

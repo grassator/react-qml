@@ -37,6 +37,19 @@ describe('Qt', function () {
             assert.equals(parent.children, []);
         });
 
+        it('should be serializable using JSON.stringify', function () {
+            /*eslint no-new:0 */
+            var parent = new Qt.QtObject();
+            new Qt.QtObject(parent);
+            assert.equals(JSON.stringify(parent), JSON.stringify({
+                children: [{
+                    children: [],
+                    _type: 'QtObject'
+                }],
+                _type: 'QtObject'
+            }));
+        });
+
     });
 
     describe('createQmlObject', function () {
