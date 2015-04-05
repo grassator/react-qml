@@ -30,6 +30,7 @@ function QtObject(parent) {
 assign(QtObject.prototype, {
     _type: 'QtObject',
     destroy: function () {
+        if (!this.parent) { return; }
         var children = this.parent.children;
         var index = children.indexOf(this);
         if (index >= 0) {

@@ -4,6 +4,10 @@
     },
     "globals": {
         "it": false,
-        "describe": false
+        "describe": false,
+        "beforeEach": false,
+        "afterEach": false,
+        "before": false,
+        "after": false
     }
 }
