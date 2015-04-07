@@ -6,21 +6,19 @@ var ReactMultiChild = require('react/lib/ReactMultiChild');
 var assign = require('object.assign');
 var emptyObject = {};
 
-function ReactQmlComponent() {
-    ReactComponent.apply(this, arguments);
-
-    // These properties are expected by ReactMultiChild
-    this.node = null;
-    this._currentElement = null;
-    this._rootNodeID = null;
-    this._mountIndex = null;
-    this._renderedChildren = null;
-}
+function ReactQmlComponent() {}
 
 ReactQmlComponent.prototype = Object.create(ReactComponent.prototype);
 
 assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
     displayName: 'ReactQmlComponent',
+
+    qmlLibrary: 'QtQuick 2.4',
+    qmlElement: 'Item',
+
+    generateQmlMarkup: function () {
+        return 'import ' + this.qmlLibrary + ';' + this.qmlElement + '{}';
+    },
 
     /**
      * Called by internal creator when Element is available
@@ -77,7 +75,7 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
     mountComponent: function(rootID, transaction, context) {
         var props = this._currentElement.props;
         this._rootNodeID = rootID;
-        this.node = Qt.createQmlObject('import QtQuick 2.0; Rectangle {}', context.qmlParent);
+        this.node = Qt.createQmlObject(this.generateQmlMarkup(), context.qmlParent);
         this.node.objectName = rootID;
         this.mountChildren(props.children, transaction, assign({}, context, { qmlParent: this.node }));
         this.applyNodeProps(emptyObject, props);
@@ -100,5 +98,29 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
     }
 
 });
+
+/**
+ * Provides an easy way to create derived classes.
+ * @param {string} qmlElement
+ * @param {string} qmlLibrary
+ * @returns {Function}
+ */
+ReactQmlComponent.extend = function (qmlElement, qmlLibrary) {
+    var Constructor = function() {
+        ReactComponent.apply(this, arguments);
+
+        // These properties are expected by ReactMultiChild
+        this.node = null;
+        this._currentElement = null;
+        this._rootNodeID = null;
+        this._mountIndex = null;
+        this._renderedChildren = null;
+    };
+    Constructor.displayName = 'ReactQml' + qmlElement;
+    Constructor.prototype = Object.create(ReactQmlComponent.prototype);
+    Constructor.prototype.qmlElement = qmlElement;
+    Constructor.prototype.qmlLibrary = qmlLibrary;
+    return Constructor;
+};
 
 module.exports = ReactQmlComponent;

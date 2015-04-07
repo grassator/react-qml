@@ -35,7 +35,7 @@ describe('ReactQml', function () {
         it('should allow to render a ReactQmlComponent wrapped in a ReactCompositeComponent', function () {
             var Test = React.createClass({
                 render: function () {
-                    return React.createElement(React.Rectangle);
+                    return React.createElement(React.QtQuick.Rectangle);
                 }
             });
             React.render(React.createElement(Test), root);
@@ -48,7 +48,7 @@ describe('ReactQml', function () {
         });
 
         it('should allow to render a standalone ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle), root);
+            React.render(React.createElement(React.QtQuick.Rectangle), root);
             assert.match(root, {
                 children: [{
                     _type: 'Rectangle',
@@ -60,14 +60,14 @@ describe('ReactQml', function () {
         });
 
         it('should allow to unmount a ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle), root);
+            React.render(React.createElement(React.QtQuick.Rectangle), root);
             React.unmountComponentAtNode(root);
             assert.equals(root.children, []);
         });
 
         it('should allow to update properties by re-rendering a ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle), root);
-            React.render(React.createElement(React.Rectangle, {
+            React.render(React.createElement(React.QtQuick.Rectangle), root);
+            React.render(React.createElement(React.QtQuick.Rectangle, {
                 color: 'red'
             }), root);
             assert.match(root, {
@@ -76,19 +76,19 @@ describe('ReactQml', function () {
         });
 
         it('should allow to unset properties by re-rendering a ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle, {
+            React.render(React.createElement(React.QtQuick.Rectangle, {
                 color: 'red'
             }), root);
-            React.render(React.createElement(React.Rectangle), root);
+            React.render(React.createElement(React.QtQuick.Rectangle), root);
             assert.match(root, {
                 children: [{ color: undefined }]
             });
         });
 
         it('should allow render nested ReactQmlComponents', function () {
-            React.render(React.createElement(React.Rectangle, null,
-                React.createElement(React.Rectangle, null,
-                    React.createElement(React.Rectangle)
+            React.render(React.createElement(React.QtQuick.Rectangle, null,
+                React.createElement(React.QtQuick.Rectangle, null,
+                    React.createElement(React.QtQuick.Rectangle)
                 )
             ), root);
             assert.match(root.children, [{
@@ -101,9 +101,9 @@ describe('ReactQml', function () {
         });
 
         it('should allow to add children by re-rendering a ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle), root);
-            React.render(React.createElement(React.Rectangle, null,
-                React.createElement(React.Rectangle)
+            React.render(React.createElement(React.QtQuick.Rectangle), root);
+            React.render(React.createElement(React.QtQuick.Rectangle, null,
+                React.createElement(React.QtQuick.Rectangle)
             ), root);
             assert.match(root.children, [{
                 children: [{
@@ -113,12 +113,12 @@ describe('ReactQml', function () {
         });
 
         it('should allow to remove children by re-rendering a ReactQmlComponent', function () {
-            React.render(React.createElement(React.Rectangle, null,
-                React.createElement(React.Rectangle, { key: 'one' }),
-                React.createElement(React.Rectangle, { key: 'two' })
+            React.render(React.createElement(React.QtQuick.Rectangle, null,
+                React.createElement(React.QtQuick.Rectangle, { key: 'one' }),
+                React.createElement(React.QtQuick.Rectangle, { key: 'two' })
             ), root);
-            React.render(React.createElement(React.Rectangle, null,
-                React.createElement(React.Rectangle, { key: 'two' })
+            React.render(React.createElement(React.QtQuick.Rectangle, null,
+                React.createElement(React.QtQuick.Rectangle, { key: 'two' })
             ), root);
             assert.match(root.children, [{
                 children: { 0: { objectName: 'two' }, length: 1 }

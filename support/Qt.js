@@ -45,7 +45,7 @@ function createQmlObject(evalText, parent) {
         throw new Error('You need to provide a `parent` to Qt.createQmlObject');
     }
     var child = new QtObject(parent);
-    child._type = evalText.match(/([A-z][\w]*)[\s|\n]*\{/)[1];
+    child._type = evalText.match(/import\s+[^;]+;\s*([A-z][\w]*)[\s|\n]*\{/)[1];
     return child;
 }
 

@@ -2,7 +2,7 @@
 
 var React = require('react');
 var ReactQmlMount = require('./ReactQmlMount');
-var ReactQmlComponent = require('./ReactQmlComponent');
+var ReactQmlQtQuick = require('./ReactQmlQtQuick');
 
 // This makes sure that we use custom ReconcileTransaction that
 // doesn't rely on DOM being available
@@ -10,16 +10,9 @@ var ReactUpdates = require('react/lib/ReactUpdates');
 var ReactQmlReconcileTransaction = require('./ReactQmlReconcileTransaction');
 ReactUpdates.injection.injectReconcileTransaction(ReactQmlReconcileTransaction);
 
-function Rectangle() {
-    ReactQmlComponent.apply(this, arguments);
-}
-
-Rectangle.prototype = Object.create(ReactQmlComponent.prototype);
-Rectangle.displayName = 'ReactQmlRectangle';
-
 module.exports = {
     // Qml components
-    Rectangle: Rectangle,
+    QtQuick: ReactQmlQtQuick,
 
     // Custom mounting
     render: ReactQmlMount.render,
