@@ -4,7 +4,7 @@
  * This provides minimal QML environment that is used by ReactQml
  */
 
-var assign = require('object.assign');
+var assign = require('react/lib/Object.assign');
 
 function QtObject(parent) {
     if (parent && !(parent instanceof QtObject)) {
@@ -40,13 +40,35 @@ assign(QtObject.prototype, {
     }
 });
 
+function QtComponent(type) {
+    this._componentType = type;
+}
+
+QtComponent.prototype.createObject = function (parent, props) {
+    var obj = new QtObject(parent);
+    assign(obj, props);
+    obj._type = this._componentType;
+    return obj;
+};
+
+/**
+ * @param evalText
+ * @param parent
+ * @returns {QtObject|QtComponent}
+ */
 function createQmlObject(evalText, parent) {
     if (!parent) {
         throw new Error('You need to provide a `parent` to Qt.createQmlObject');
     }
-    var child = new QtObject(parent);
-    child._type = evalText.match(/import\s+[^;]+;\s*([A-z][\w]*)[\s|\n]*\{/)[1];
-    return child;
+    var obj;
+    var match = evalText.match(/import\s+[^;]+;\s*(Component\s*\{)?\s*([A-z][\w]*)[\s|\n]*\{/);
+    if (match[1]) {
+        obj = new QtComponent(match[2]);
+    } else {
+        obj = new QtObject(parent);
+        obj._type = match[2];
+    }
+    return obj;
 }
 
 module.exports = global.Qt = {

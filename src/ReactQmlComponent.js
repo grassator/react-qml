@@ -1,23 +1,31 @@
-/* global Qt */
 'use strict';
 
-var ReactComponent = require('react/lib/ReactComponent');
 var ReactMultiChild = require('react/lib/ReactMultiChild');
-var assign = require('object.assign');
-var emptyObject = {};
+var ReactQmlComponentMetaFactory = require('./ReactQmlComponentMetaFactory');
+var assign = require('react/lib/Object.assign');
 
-function ReactQmlComponent() {}
-
-ReactQmlComponent.prototype = Object.create(ReactComponent.prototype);
-
-assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
+var Mixin = assign({}, ReactMultiChild.Mixin, {
     displayName: 'ReactQmlComponent',
 
     qmlLibrary: 'QtQuick 2.4',
-    qmlElement: 'Item',
+    qmlType: 'Item',
 
-    generateQmlMarkup: function () {
-        return 'import ' + this.qmlLibrary + ';' + this.qmlElement + '{}';
+    /**
+     * @param {QtObject} parent
+     * @param {Object} props
+     * @protected
+     */
+    createQmlObject: function (parent, props) {
+        var assignableProps = {};
+        for (var key in props) {
+            if (key === 'key' || key === 'children' || key === 'ref') { continue; }
+            if (props.hasOwnProperty(key)) {
+                assignableProps[key] = props[key];
+            }
+        }
+
+        var factory = ReactQmlComponentMetaFactory.createFactory(this.qmlLibrary, this.qmlType);
+        return factory.createObject(parent, assignableProps);
     },
 
     /**
@@ -58,27 +66,32 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
      * @param {Object} props
      */
     applyNodeProps: function(oldProps, props) {
+        var key;
+
         // applying new / changed properties
-        Object.keys(props).forEach(function (key) {
-            if (key === 'children' || key === 'key' || key === 'ref') { return; }
-            if (props[key] === oldProps[key]) { return; }
-            this.node[key] = props[key];
-        }, this);
+        for (key in props) {
+            if (key === 'children' || key === 'key' || key === 'ref') { continue; }
+            if (props[key] === oldProps[key]) { continue; }
+            if (props.hasOwnProperty(key)) {
+                this.node[key] = props[key];
+            }
+        }
 
         // unsetting removed properties
-        Object.keys(oldProps).forEach(function (key) {
-            if (key in props || key === 'children') { return; }
-            this.node[key] = undefined;
-        }, this);
+        for (key in oldProps) {
+            if (key in props || key === 'children') { continue; }
+            if (oldProps.hasOwnProperty(key)) {
+                this.node[key] = undefined;
+            }
+        }
     },
 
     mountComponent: function(rootID, transaction, context) {
         var props = this._currentElement.props;
         this._rootNodeID = rootID;
-        this.node = Qt.createQmlObject(this.generateQmlMarkup(), context.qmlParent);
+        this.node = this.createQmlObject(context.qmlParent, props);
         this.node.objectName = rootID;
         this.mountChildren(props.children, transaction, assign({}, context, { qmlParent: this.node }));
-        this.applyNodeProps(emptyObject, props);
         return this.node;
     },
 
@@ -101,26 +114,24 @@ assign(ReactQmlComponent.prototype, ReactMultiChild.Mixin, {
 
 /**
  * Provides an easy way to create derived classes.
- * @param {string} qmlElement
  * @param {string} qmlLibrary
+ * @param {string} qmlType
  * @returns {Function}
  */
-ReactQmlComponent.extend = function (qmlElement, qmlLibrary) {
-    var Constructor = function() {
-        ReactComponent.apply(this, arguments);
-
-        // These properties are expected by ReactMultiChild
-        this.node = null;
-        this._currentElement = null;
-        this._rootNodeID = null;
-        this._mountIndex = null;
-        this._renderedChildren = null;
-    };
-    Constructor.displayName = 'ReactQml' + qmlElement;
-    Constructor.prototype = Object.create(ReactQmlComponent.prototype);
-    Constructor.prototype.qmlElement = qmlElement;
-    Constructor.prototype.qmlLibrary = qmlLibrary;
-    return Constructor;
+module.exports = {
+    extend: function (qmlLibrary, qmlType) {
+        var Constructor = function() {
+            // These properties are expected by ReactMultiChild
+            this.node = null;
+            this._currentElement = null;
+            this._rootNodeID = null;
+            this._mountIndex = null;
+            this._renderedChildren = null;
+        };
+        Constructor.displayName = 'ReactQml' + qmlType;
+        assign(Constructor.prototype, Mixin);
+        Constructor.prototype.qmlType = qmlType;
+        Constructor.prototype.qmlLibrary = qmlLibrary;
+        return Constructor;
+    }
 };
-
-module.exports = ReactQmlComponent;

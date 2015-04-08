@@ -3,7 +3,7 @@
 var CallbackQueue = require('react/lib/CallbackQueue');
 var PooledClass = require('react/lib/PooledClass');
 var Transaction = require('react/lib/Transaction');
-var assign = require('object.assign');
+var assign = require('react/lib/Object.assign');
 
 /**
  * Provides a `CallbackQueue` queue for collecting `onDOMReady` callbacks during

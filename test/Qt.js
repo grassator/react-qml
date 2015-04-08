@@ -4,6 +4,7 @@ var Qt = require('../support/Qt');
 var assert = require('referee').assert;
 var refute = require('referee').refute;
 var qmlRectangleString = 'import QtQuick 2.0; Rectangle {}';
+var qmlComponentString = 'import QtQuick 2.0; Component { Rectangle {} }';
 
 describe('Qt', function () {
 
@@ -72,6 +73,22 @@ describe('Qt', function () {
             assert.same(item._type, 'Rectangle');
         });
 
+        it('should be able to create a component', function () {
+            var parent = new Qt.QtObject();
+            var component = Qt.createQmlObject(qmlComponentString, parent);
+            assert.isFunction(component.createObject);
+        });
+
     });
 
+    describe('QtComponent', function () {
+        it('should be able to create a objects with given parent and props', function () {
+            var parent = new Qt.QtObject();
+            var component = Qt.createQmlObject(qmlComponentString, parent);
+            var obj = component.createObject(parent, { foo: 'bar' });
+            assert.same(obj.parent, parent);
+            assert.same(obj.foo, 'bar');
+        });
+
+    });
 });

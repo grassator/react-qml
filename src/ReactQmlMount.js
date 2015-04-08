@@ -7,6 +7,7 @@ var ReactUpdateQueue = require('react/lib/ReactUpdateQueue');
 var shouldUpdateReactComponent = require('react/lib/shouldUpdateReactComponent');
 var instantiateReactComponent = require('react/lib/instantiateReactComponent');
 
+var ReactQmlRoot = require('./ReactQmlRoot');
 var ReactQmlComponent = require('./ReactQmlComponent');
 var ReactQmlComponentCompositeWrapper = React.createClass({
     render: function () {
@@ -88,9 +89,13 @@ exports.unmountComponentAtNode = function (container) {
 };
 
 exports.render = function (nextElement, container, callback) {
+    if (!ReactQmlRoot.root) {
+        ReactQmlRoot.updateRootFromContainer(container);
+    }
+
     // This is necessary to avoid ReactQmlComponent being subclass of ReactCompositeComponent
     // at least as of version 0.13.1 Facebook employs similar hack
-    if (nextElement.type.prototype instanceof ReactQmlComponent) {
+    if (nextElement.type.prototype.qmlType) {
         nextElement = React.createElement(ReactQmlComponentCompositeWrapper, null, nextElement);
     }
 
