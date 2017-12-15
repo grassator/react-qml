@@ -1,20 +1,13 @@
+> DEPRECATED. This project is no longer in active development.
+
 # react-qml
-[![NPM version](https://badge.fury.io/js/react-qml.svg)](https://npmjs.org/package/react-qml)
 [![GitHub version][git-tag-image]][project-url]
 [![Build Status][travis-image]][travis-url]
 [![Dependency Status][daviddm-url]][daviddm-image]
 [![Inline docs][doc-image]][doc-url]
 [![Code Climate][climate-image]][climate-url]
 
-> This is work in progress, so expect things to be broken or not implemented.
-
 `react-qml` is a bridge library that allows to use React.js with QML.
-
-## Roadmap
-
-- [x] rendering and re-rendering and unmounting React Component trees. (0.1.0)
-- [ ] components for other QML primitives like `Text`, `Item`, `Image`, etc.
-- [ ] event listeners
 
 ## Install
 
